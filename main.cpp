@@ -1,30 +1,38 @@
-//Wait for finished.
+//Easily run on a thread
 
 #include <QCoreApplication>
-#include<QThread>
 #include <QtConcurrent>
-#include<QFuture>
+#include<QThread>
+#include<QThreadPool>
 
-void test(QString name, int max)
+
+void loop()
 {
-    for(int i=0; i< max; i++)
+    for(int i=0;i<10;i++)
     {
-        qInfo() << name << i << QThread::currentThread();
+        qInfo() << "Loop" << i << "on" << QThread::currentThread();
     }
 }
+
+
+void Test()
+{
+    qInfo() << "Test on" << QThread::currentThread();
+    loop();
+}
+
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    QString name ="name";
-    QFuture<void> future =QtConcurrent::run(test,name,6);
+    QThread::currentThread()->setObjectName("Main");
 
-    qInfo() <<"Do stuff here";
+    QThreadPool pool;
 
-    future.waitForFinished();
+    QFuture<void> future = QtConcurrent::run(&pool,Test);
 
-    qInfo() << "END" ;  //Block.
+    qInfo() <<" Main on " << QThread::currentThread();
 
     return a.exec();
 }
