@@ -1,28 +1,23 @@
 #include <QCoreApplication>
-#include<QDebug>
-#include<QThread>
-#include<QThreadPool>
-#include<QMutex>
-#include "counter.h"
-
+<<<<<<< HEAD
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    QThread::currentThread()->setObjectName("Main");
-    QThreadPool* pool = QThreadPool::globalInstance();
+=======
+#include "remote_television.h"
 
-    QMutex mutex;
-    int value =0;
+int main(int argc, char *argv[]) {
+    QCoreApplication a(argc, argv);
 
-    qInfo()<< pool->maxThreadCount() <<" Threads ";
+    Remote remoteObject;
+    Television tvObject;
 
-    for(int i=0; i <100; i++)
-    {
-        Counter* c =new Counter(&mutex,&value);
-        c->setAutoDelete(true);
-        pool-> start(c);
-    }
+    QObject::connect(&remoteObject, SIGNAL(channelChanged(int)), &tvObject, SLOT(changeChannel(int)));
+
+    remoteObject.buttonPressed(10);
+
+>>>>>>> 7103f812a8df75608c3f579f17c24ad426ec6e7c
     return a.exec();
 }
