@@ -1,38 +1,29 @@
-//Sync threads through Qwait condition
-
 #include <QCoreApplication>
-#include<QWaitCondition>
-#include<QMutex>
-#include<QThread>
-#include<QDebug>
-#include "producer.h"
-#include "consumer.h"
+#include<QThreadPool>
+#include "widget.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    QWaitCondition valueReady;
-    QMutex mutex;
-    QThread producerThread;
-    QThread consumerThread;
+    Widget* producer = new Widget();
+    Widget* consumer = new Widget();
 
-    int value = 0;
+    producer->setObjectName("Producer");
+    consumer->setObjectName("Consumer");
 
-    Producer *producer = new Producer(&mutex,&valueReady,&value);
-
-    Consumer *consumer = new Consumer(&mutex,&valueReady,&value);
-
-
-    producer->moveToThread(&producerThread);
-    consumer->moveToThread(&consumerThread);
+    producer->setIsSender(true);
+    producer->setAutoDelete(true);
+    consumer->setAutoDelete(true);
 
 
-    QObject::connect(&producerThread,&QThread::started,producer,&Producer::run);
-    QObject::connect(&consumerThread,&QThread::started,consumer,&Consumer::run);
+    QObject::connect(producer,&Widget::started,consumer,&Widget::workStarted,Qt::QueuedConnection);
+    QObject::connect(producer,&Widget::update,consumer,&Widget::workReady,Qt::QueuedConnection);
+    QObject::connect(producer,&Widget::finished,consumer,&Widget::workFinished,Qt::QueuedConnection);
 
 
-    producerThread.start();
-    consumerThread.start();
+    QThreadPool::globalInstance()->start(producer);
+    QThreadPool::globalInstance()->start(producer);
+
     return a.exec();
 }
