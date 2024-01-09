@@ -1,32 +1,38 @@
-// for multiple reuasable threads // fully multi threaded application
-// highly memory  efficient , we don"t have to worry about memory management
-//not creating millions of thread.
-//QThreadpool and QRunnable
-
-//let threadpool do the work for you.
+//Sync threads through Qwait condition
 
 #include <QCoreApplication>
-#include<QDebug>
+#include<QWaitCondition>
+#include<QMutex>
 #include<QThread>
-#include<QThreadPool>
-#include "counter.h"
+#include<QDebug>
+#include "producer.h"
+#include "consumer.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    QThread::currentThread()->setObjectName("Main"); //main thread
+    QWaitCondition valueReady;
+    QMutex mutex;
+    QThread producerThread;
+    QThread consumerThread;
 
-    QThreadPool* pool = QThreadPool::globalInstance();
-    qInfo() << pool ->maxThreadCount() << "Threads";
+    int value = 0;
 
-    for(int i = 0; i < 100; i++)
-    {
-        Counter* c = new Counter();
-        c->setAutoDelete(true);
-        pool-> start(c);
+    Producer *producer = new Producer(&mutex,&valueReady,&value);
 
-    }
+    Consumer *consumer = new Consumer(&mutex,&valueReady,&value);
 
+
+    producer->moveToThread(&producerThread);
+    consumer->moveToThread(&consumerThread);
+
+
+    QObject::connect(&producerThread,&QThread::started,producer,&Producer::run);
+    QObject::connect(&consumerThread,&QThread::started,consumer,&Consumer::run);
+
+
+    producerThread.start();
+    consumerThread.start();
     return a.exec();
 }
