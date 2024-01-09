@@ -1,30 +1,21 @@
 #include "counter.h"
 
-
-
-Counter::Counter(QMutex *mutex, int *value)
-{
-    m_value = value;
-    m_mutex = mutex;
-}
-
+Counter::Counter() {}
 
 void Counter::run()
 {
-    //wait untill we do stuff
-    QMutexLocker locker(m_mutex); // QMutexLocker will automatically unlock
-    //m_mutex->lock();  //WE WILL WAIT utill unlock
+    qInfo() << "starting" <<QThread::currentThread();
 
+    for(int i =0; i<20; i++)
+    {
 
-    //Our code here
-    QThread::currentThread()->msleep(500);
-    *m_value = *m_value +1;
+        //comment this out to see the thread being reused
 
-    qInfo() <<*m_value << QThread::currentThread();
+        qInfo() <<QThread::currentThread() << " = " <<i;
+        auto value = static_cast<unsigned long>(QRandomGenerator::global()->bounded(100));
 
+        QThread::currentThread() -> msleep(value);
+    }
 
-
-    //m_mutex->unlock();  // other threads can lock
-
-
+    qInfo() << " Finished " << QThread::currentThread();
 }
