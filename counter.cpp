@@ -12,8 +12,8 @@ Counter::Counter(QMutex *mutex, int *value)
 void Counter::run()
 {
     //wait untill we do stuff
-
-    m_mutex->lock();  //WE WILL WAIT utill unlock
+    QMutexLocker locker(m_mutex); // QMutexLocker will automatically unlock
+    //m_mutex->lock();  //WE WILL WAIT utill unlock
 
 
     //Our code here
@@ -24,7 +24,7 @@ void Counter::run()
 
 
 
-    m_mutex->unlock();  // other threads can lock
+    //m_mutex->unlock();  // other threads can lock
 
 
 }
