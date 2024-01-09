@@ -8,8 +8,10 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     QThread::currentThread()->setObjectName("Main");
 
-    manager m;
+    manager m= new manager();
     m.start();
 
     return a.exec();
 }
+
+
