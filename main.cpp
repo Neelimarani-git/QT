@@ -1,32 +1,30 @@
-// very easy, removes the complexity of threading
+//Wait for finished.
 
 #include <QCoreApplication>
+#include<QThread>
 #include <QtConcurrent>
+#include<QFuture>
 
-int do_map(int value)
+void test(QString name, int max)
 {
-    qInfo() <<"Do stuff: " << value;
-    int num = value * 10;
-    return num;
+    for(int i=0; i< max; i++)
+    {
+        qInfo() << name << i << QThread::currentThread();
+    }
 }
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    QList<int> values;
+    QString name ="name";
+    QFuture<void> future =QtConcurrent::run(test,name,6);
 
-    for(int i=0; i < 9; i++)
-    {
-        values << i;
-    }
+    qInfo() <<"Do stuff here";
 
-    qInfo() << "Starting..";
-    QList<int> updated = QtConcurrent::blockingMapped(values, &do_map);
+    future.waitForFinished();
 
-    qInfo() << "Finished";
-
-    qInfo() << updated;
+    qInfo() << "END" ;  //Block.
 
     return a.exec();
 }
