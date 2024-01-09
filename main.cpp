@@ -1,26 +1,21 @@
 //Multi threading
-//ASyncronous_code
+//Syncronous_code
 
 #include <QCoreApplication>
-#include <QThread>
-#include <QTimer>
+#include<QThread>
+
 
 void test()
 {
     qInfo() << "Testing" << QThread::currentThread();
 }
-
-
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
     QThread::currentThread()->setObjectName("Main Thread");
-
-    qInfo() << "Starting" << QThread::currentThread();
-    QTimer timer;
-    timer.singleShot(3000,&test);
-    qInfo() << "Finished" << QThread::currentThread();
-
+    qInfo() << "Starting"<< QThread::currentThread();
+    test();
+    qInfo()<< "Finishing" <<QThread::currentThread();
     return a.exec();
 }

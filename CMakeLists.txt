@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(ASynchronous_code LANGUAGES CXX)
+project(Synchronous_code LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -12,10 +12,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 
-add_executable(ASynchronous_code
+add_executable(Synchronous_code
   main.cpp
 )
-target_link_libraries(ASynchronous_code Qt${QT_VERSION_MAJOR}::Core)
+target_link_libraries(Synchronous_code Qt${QT_VERSION_MAJOR}::Core)
 
 include(GNUInstallDirs)
 install(TARGETS Synchronous_code
