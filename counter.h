@@ -4,17 +4,18 @@
 #include <QObject>
 #include<QDebug>
 #include<QThread>
-#include<QRunnable>
 #include<QRandomGenerator>
 
-
-class Counter : public QRunnable
+class counter : public QObject
 {
+    Q_OBJECT
 public:
-    Counter();
+    explicit counter(QObject *parent = nullptr);
+    ~counter();
 
-public:
-    void run(); //QRunnable interface
+signals:
+public slots:
+    void start();
 };
 
 #endif // COUNTER_H

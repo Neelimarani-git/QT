@@ -1,21 +1,30 @@
 #include "counter.h"
 
-Counter::Counter() {}
-
-void Counter::run()
+counter::counter(QObject *parent) : QObject(parent)
 {
-    qInfo() << "starting" <<QThread::currentThread();
+    qInfo() << this << "Constructor";
+}
 
-    for(int i =0; i<20; i++)
+counter::~counter()
+{
+    qInfo() << this << "Destructor";
+}
+
+void counter::start()
+{
+    for(int i =0; i < 20; i ++)
     {
+        qInfo() << QThread::currentThread()->objectName() << " = " << i;
 
-        //comment this out to see the thread being reused
+        auto value = static_cast<unsigned long>(QRandomGenerator::global()->bounded(500));
+        QThread::currentThread()->msleep(value);
 
-        qInfo() <<QThread::currentThread() << " = " <<i;
-        auto value = static_cast<unsigned long>(QRandomGenerator::global()->bounded(100));
-
-        QThread::currentThread() -> msleep(value);
+        qInfo() << QThread::currentThread()->objectName() << "Complete";
     }
 
-    qInfo() << " Finished " << QThread::currentThread();
+    qInfo() << this << "completed!!!!!!!!";
+
+    deleteLater(); //destructor will call
+
+    QThread::currentThread()->quit(); //finish function will call.
 }

@@ -1,15 +1,15 @@
 #include <QCoreApplication>
-#include "remote_television.h"
+#include<QDebug>
+#include<QThread>
+#include "manager.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     QCoreApplication a(argc, argv);
+    QThread::currentThread()->setObjectName("Main");
 
-    Remote remoteObject;
-    Television tvObject;
-
-    QObject::connect(&remoteObject, SIGNAL(channelChanged(int)), &tvObject, SLOT(changeChannel(int)));
-
-    remoteObject.buttonPressed(10);
+    manager m;
+    m.start();
 
     return a.exec();
 }
