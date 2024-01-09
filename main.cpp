@@ -1,21 +1,28 @@
 #include <QCoreApplication>
+#include<QDebug>
 #include<QThread>
-#include "worker.h"
-#include"test.h"
+#include<QThreadPool>
+#include<QMutex>
+#include "counter.h"
+
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    QThread::currentThread()->setObjectName("Main thread");
 
-    Test thread;
-    thread.setObjectName("Thread 1");
+    QThread::currentThread()->setObjectName("Main");
+    QThreadPool* pool = QThreadPool::globalInstance();
 
-    worker work;
-    work.moveToThread(&thread);
+    QMutex mutex;
+    int value =0;
 
+    qInfo()<< pool->maxThreadCount() <<" Threads ";
 
-    QObject::connect(&thread,&QThread::started,&work,&worker::work);
-    thread.start();
+    for(int i=0; i <100; i++)
+    {
+        Counter* c =new Counter(&mutex,&value);
+        c->setAutoDelete(true);
+        pool-> start(c);
+    }
     return a.exec();
 }
