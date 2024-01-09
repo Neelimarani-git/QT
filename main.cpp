@@ -1,29 +1,15 @@
 #include <QCoreApplication>
-#include<QThreadPool>
-#include "widget.h"
+#include "remote_television.h"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
 
-    Widget* producer = new Widget();
-    Widget* consumer = new Widget();
+    Remote remoteObject;
+    Television tvObject;
 
-    producer->setObjectName("Producer");
-    consumer->setObjectName("Consumer");
+    QObject::connect(&remoteObject, SIGNAL(channelChanged(int)), &tvObject, SLOT(changeChannel(int)));
 
-    producer->setIsSender(true);
-    producer->setAutoDelete(true);
-    consumer->setAutoDelete(true);
-
-
-    QObject::connect(producer,&Widget::started,consumer,&Widget::workStarted,Qt::QueuedConnection);
-    QObject::connect(producer,&Widget::update,consumer,&Widget::workReady,Qt::QueuedConnection);
-    QObject::connect(producer,&Widget::finished,consumer,&Widget::workFinished,Qt::QueuedConnection);
-
-
-    QThreadPool::globalInstance()->start(producer);
-    QThreadPool::globalInstance()->start(producer);
+    remoteObject.buttonPressed(10);
 
     return a.exec();
 }
