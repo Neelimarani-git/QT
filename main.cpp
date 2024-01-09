@@ -1,23 +1,39 @@
 #include <QCoreApplication>
-<<<<<<< HEAD
+#include<QSemaphore>
+#include<QList>
+#include<QDebug>
+#include<QThread>
+#include<QRandomGenerator>
+#include "worker.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-=======
-#include "remote_television.h"
+    QList<int> values;
+    values.resize(10);
+    values.fill(0);
 
-int main(int argc, char *argv[]) {
-    QCoreApplication a(argc, argv);
+    QSemaphore sema(values.size());
+    qInfo() << values;
 
-    Remote remoteObject;
-    Television tvObject;
+    QThread thread1;
+    QThread thread2;
 
-    QObject::connect(&remoteObject, SIGNAL(channelChanged(int)), &tvObject, SLOT(changeChannel(int)));
+    thread1.setObjectName("Thread 1");
+    thread2.setObjectName("Thread 2");
 
-    remoteObject.buttonPressed(10);
 
->>>>>>> 7103f812a8df75608c3f579f17c24ad426ec6e7c
+    Worker worker1(&sema,&values);
+    Worker worker2(&sema,&values);
+    worker1.moveToThread(&thread1);
+    worker2.moveToThread(&thread2);
+
+    QObject::connect(&thread1,&QThread::started,&worker1,&Worker::run);
+    QObject::connect(&thread2,&QThread::started,&worker2,&Worker::run);
+
+    thread1.start();
+    thread2.start();
+
     return a.exec();
 }
