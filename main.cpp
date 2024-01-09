@@ -1,21 +1,28 @@
-//Multi threading
-//Syncronous_code
-
 #include <QCoreApplication>
+#include<QDebug>
 #include<QThread>
+#include<QThreadPool>
+#include<QMutex>
+#include "counter.h"
 
 
-void test()
-{
-    qInfo() << "Testing" << QThread::currentThread();
-}
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    QThread::currentThread()->setObjectName("Main Thread");
-    qInfo() << "Starting"<< QThread::currentThread();
-    test();
-    qInfo()<< "Finishing" <<QThread::currentThread();
+    QThread::currentThread()->setObjectName("Main");
+    QThreadPool* pool = QThreadPool::globalInstance();
+
+    QMutex mutex;
+    int value =0;
+
+    qInfo()<< pool->maxThreadCount() <<" Threads ";
+
+    for(int i=0; i <100; i++)
+    {
+        Counter* c =new Counter(&mutex,&value);
+        c->setAutoDelete(true);
+        pool-> start(c);
+    }
     return a.exec();
 }
