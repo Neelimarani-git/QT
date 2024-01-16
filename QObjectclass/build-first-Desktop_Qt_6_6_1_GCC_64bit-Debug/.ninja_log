@@ -1,9 +1,0 @@
-# ninja log v5
-0	461	1704575098202553696	first_autogen/timestamp	19eab14d9811a71b
-0	461	1704575098202553696	first_autogen/mocs_compilation.cpp	19eab14d9811a71b
-0	461	1704575098202553696	/home/neelima/mycode/QObjectclass/build-first-Desktop_Qt_6_6_1_GCC_64bit-Debug/first_autogen/timestamp	19eab14d9811a71b
-0	461	1704575098202553696	/home/neelima/mycode/QObjectclass/build-first-Desktop_Qt_6_6_1_GCC_64bit-Debug/first_autogen/mocs_compilation.cpp	19eab14d9811a71b
-462	3748	1704575101487387103	CMakeFiles/first.dir/firstcode.cpp.o	6d60cb147165b667
-462	3855	1704575101603760458	CMakeFiles/first.dir/first_autogen/mocs_compilation.cpp.o	d960bed440e81185
-461	4066	1704575101804404171	CMakeFiles/first.dir/main.cpp.o	dd5acf3959bf5655
-4066	4372	1704575102113358064	first	7997a6133287f2d7
